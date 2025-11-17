@@ -3090,6 +3090,87 @@
       "maintainer": " https://github.com/mycroftwilde/portainer_templates/"
     },
     {
+      "id": 544,
+      "categories": [
+        "Business",
+        "ERP"
+      ],
+      "description": "Déploie Odoo et PostgreSQL avec volumes persistants, ports 8069/8072 et support des addons Enterprise.",
+      "env": [
+        {
+          "default": "19",
+          "label": "ODOO_VERSION",
+          "name": "ODOO_VERSION"
+        },
+        {
+          "default": "17",
+          "label": "POSTGRES_VERSION",
+          "name": "POSTGRES_VERSION"
+        },
+        {
+          "default": "odoo",
+          "label": "POSTGRES_DB",
+          "name": "POSTGRES_DB"
+        },
+        {
+          "default": "odoo",
+          "label": "POSTGRES_USER",
+          "name": "POSTGRES_USER"
+        },
+        {
+          "default": "odoo",
+          "label": "POSTGRES_PASSWORD",
+          "name": "POSTGRES_PASSWORD"
+        },
+        {
+          "default": "db",
+          "label": "POSTGRES_HOST",
+          "name": "POSTGRES_HOST"
+        },
+        {
+          "default": "5432",
+          "label": "POSTGRES_PORT",
+          "name": "POSTGRES_PORT"
+        },
+        {
+          "default": "8069",
+          "label": "ODOO_HTTP_PORT",
+          "name": "ODOO_HTTP_PORT"
+        },
+        {
+          "default": "8072",
+          "label": "ODOO_LONGPOLL_PORT",
+          "name": "ODOO_LONGPOLL_PORT"
+        },
+        {
+          "default": "/opt/odoo/19/enterprise",
+          "label": "ODOO_ENTERPRISE_VOLUME",
+          "name": "ODOO_ENTERPRISE_VOLUME"
+        },
+        {
+          "default": "/opt/odoo/19/config",
+          "label": "ODOO_CONFIG_VOLUME",
+          "name": "ODOO_CONFIG_VOLUME"
+        },
+        {
+          "default": "/etc/odoo/odoo.conf",
+          "label": "ODOO_CONFIG_FILE",
+          "name": "ODOO_CONFIG_FILE"
+        }
+      ],
+      "logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/odoo.png",
+      "name": "odoo-erp",
+      "note": "Pensez à sécuriser vos identifiants Postgres et à monter un volume/bind contenant les addons Enterprise si nécessaire (variable ODOO_ENTERPRISE_VOLUME).",
+      "platform": "linux",
+      "repository": {
+        "stackfile": "sources/stacks/odoo.yml",
+        "url": "https://github.com/Bemade/portainer-templates"
+      },
+      "title": "Odoo ERP",
+      "type": 3,
+      "maintainer": "https://github.com/Bemade/portainer-templates"
+    },
+    {
       "id": 50,
       "type": 1,
       "title": "Apprise-api",
@@ -13512,7 +13593,7 @@
       "platform": "linux",
       "logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/odoo.png",
       "repository": {
-        "url": "https://git.bemade.org/bemade/portainer-templates",
+        "url": "https://github.com/Bemade/portainer-templates",
         "stackfile": "sources/stacks/odoo.yml"
       },
       "env": [
