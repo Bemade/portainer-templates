@@ -1,0 +1,75 @@
+services:
+  odoo:
+    image: "odoo:${ODOO_VERSION:-19}"
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      HOST: ${POSTGRES_HOST:-db}
+      PORT: ${POSTGRES_PORT:-5432}
+      USER: ${POSTGRES_USER:-odoo}
+      PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+      DATABASE: ${POSTGRES_DB:-odoo}
+    ports:
+      - "${ODOO_HTTP_PORT:-8069}:8069"
+      - "${ODOO_LONGPOLL_PORT:-8072}:8072"
+    volumes:
+      - odoo_data:/var/lib/odoo
+      - odoo_addons:/mnt/extra-addons
+      - ${ODOO_ENTERPRISE_VOLUME:-/opt/odoo/19/enterprise}:/mnt/enterprise-addons
+      - ${ODOO_CONFIG_VOLUME:-/opt/odoo/19/config}:/etc/odoo
+    entrypoint:
+      - /bin/bash
+      - -c
+    command:
+      - |
+        set -euo pipefail
+        CONFIG_PATH="${ODOO_CONFIG_FILE:-/etc/odoo/odoo.conf}"
+        mkdir -p "$(dirname "$CONFIG_PATH")"
+        if [ ! -s "$CONFIG_PATH" ]; then
+          if [ -n "${ODOO_CONFIG_TEMPLATE:-}" ]; then
+            printf '%s\n' "${ODOO_CONFIG_TEMPLATE}" > "$CONFIG_PATH"
+          else
+            printf '%s\n' \
+              "[options]" \
+              "db_host = ${POSTGRES_HOST:-db}" \
+              "db_port = ${POSTGRES_PORT:-5432}" \
+              "db_user = ${POSTGRES_USER:-odoo}" \
+              "db_password = ${POSTGRES_PASSWORD:-odoo}" \
+              "addons_path = /usr/lib/python3/dist-packages/odoo/addons,/mnt/extra-addons,/mnt/enterprise-addons" \
+              > "$CONFIG_PATH"
+          fi
+        fi
+        exec odoo \
+          "--config=${ODOO_CONFIG_FILE:-/etc/odoo/odoo.conf}" \
+          "--addons-path=/usr/lib/python3/dist-packages/odoo/addons,/mnt/extra-addons,/mnt/enterprise-addons"
+    networks:
+      - odoo_net
+
+  db:
+    image: "postgres:${POSTGRES_VERSION:-17}"
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-odoo}
+      POSTGRES_USER: ${POSTGRES_USER:-odoo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - odoo_db_data:/var/lib/postgresql/data
+    networks:
+      - odoo_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-odoo} -d ${POSTGRES_DB:-odoo}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  odoo_data:
+  odoo_addons:
+  odoo_db_data:
+  odoo_enterprise_addons:
+
+networks:
+  odoo_net:
+    driver: bridge

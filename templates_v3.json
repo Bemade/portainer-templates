@@ -13501,42 +13501,92 @@
     },
     {
       "id": 298,
-      "type": 1,
-      "title": "Odoo",
-      "description": "Open-source business apps",
+      "type": 2,
+      "title": "Odoo ERP",
+      "description": "Déploie Odoo et PostgreSQL avec volumes persistants, ports 8069/8072 et support des addons Enterprise.",
+      "note": "Pensez à sécuriser vos identifiants Postgres et à monter un volume/bind contenant les addons Enterprise si nécessaire (variable ODOO_ENTERPRISE_VOLUME).",
       "categories": [
-        "Projectmanagement"
+        "Business",
+        "ERP"
       ],
       "platform": "linux",
       "logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/odoo.png",
-      "image": "odoo:latest",
+      "stackfile": "https://git.bemade.org/bemade/portainer-templates/raw/branch/main/sources/stacks/odoo.yml",
       "env": [
         {
-          "name": "HOST",
-          "label": "PostgreSQL database host",
-          "type": "container"
+          "name": "ODOO_VERSION",
+          "label": "Version d'Odoo",
+          "default": "19",
+          "description": "Tag Docker Hub pour Odoo (ex. 17, 18, 19)."
         },
         {
-          "name": "USER",
-          "label": "Database user"
+          "name": "POSTGRES_VERSION",
+          "label": "Version de PostgreSQL",
+          "default": "17",
+          "description": "Tag Docker Hub pour PostgreSQL (ex. 15, 16, 17)."
         },
         {
-          "name": "PASSWORD",
-          "label": "Database password"
+          "name": "POSTGRES_DB",
+          "label": "Nom de la base",
+          "default": "odoo"
+        },
+        {
+          "name": "POSTGRES_USER",
+          "label": "Utilisateur Postgres",
+          "default": "odoo"
+        },
+        {
+          "name": "POSTGRES_PASSWORD",
+          "label": "Mot de passe Postgres",
+          "default": "odoo",
+          "description": "Modifiez cette valeur avant un déploiement en production."
+        },
+        {
+          "name": "POSTGRES_HOST",
+          "label": "Hôte Postgres",
+          "default": "db"
+        },
+        {
+          "name": "POSTGRES_PORT",
+          "label": "Port Postgres",
+          "default": "5432"
+        },
+        {
+          "name": "ODOO_HTTP_PORT",
+          "label": "Port HTTP Odoo",
+          "default": "8069"
+        },
+        {
+          "name": "ODOO_LONGPOLL_PORT",
+          "label": "Port long-polling Odoo",
+          "default": "8072"
+        },
+        {
+          "name": "ODOO_ENTERPRISE_VOLUME",
+          "label": "Volume/bind pour addons Enterprise",
+          "default": "/opt/odoo/19/enterprise",
+          "description": "Nom de volume Docker ou chemin bind monté sur /mnt/enterprise-addons (ex. /srv/odoo/enterprise)."
+        },
+        {
+          "name": "ODOO_CONFIG_VOLUME",
+          "label": "Volume/bind pour la configuration",
+          "default": "/opt/odoo/19/config",
+          "description": "Nom de volume Docker ou chemin bind monté sur /etc/odoo contenant odoo.conf."
+        },
+        {
+          "name": "ODOO_CONFIG_FILE",
+          "label": "Chemin du fichier de configuration",
+          "default": "/etc/odoo/odoo.conf",
+          "description": "Chemin passé à l'option --config lors du démarrage d'Odoo."
+        },
+        {
+          "name": "ODOO_CONFIG_TEMPLATE",
+          "label": "Contenu du fichier odoo.conf (optionnel)",
+          "description": "Texte injecté tel quel dans odoo.conf si le fichier est absent. Laissez vide pour générer une configuration par défaut.",
+          "type": "textarea"
         }
       ],
-      "ports": [
-        "8069/tcp"
-      ],
-      "volumes": [
-        {
-          "container": "/var/lib/odoo"
-        },
-        {
-          "container": "/mnt/extra-addons"
-        }
-      ],
-      "maintainer": " https://github.com/mikestraney/portainer-templates/"
+      "maintainer": "https://git.bemade.org/bemade/portainer-templates"
     },
     {
       "id": 299,
