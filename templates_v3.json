@@ -13511,7 +13511,10 @@
       ],
       "platform": "linux",
       "logo": "https://portainer-io-assets.sfo2.digitaloceanspaces.com/logos/odoo.png",
-      "stackfile": "https://git.bemade.org/bemade/portainer-templates/raw/branch/main/sources/stacks/odoo.yml",
+      "repository": {
+        "url": "https://git.bemade.org/bemade/portainer-templates",
+        "stackfile": "sources/stacks/odoo.yml"
+      },
       "env": [
         {
           "name": "ODOO_VERSION",
